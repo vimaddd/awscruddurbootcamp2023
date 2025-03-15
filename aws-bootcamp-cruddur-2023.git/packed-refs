@@ -1,0 +1,4 @@
+# pack-refs with: peeled fully-peeled sorted 
+6944fe3967e0c53110094184849737b4fff342d9 refs/heads/main
+31c5e43773dd43155046634a98e968452f55ca29 refs/heads/week-1-first-commit
+31c5e43773dd43155046634a98e968452f55ca29 refs/tags/week1
