@@ -9,11 +9,7 @@ services:
       OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME}"
       AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
       AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
-      REACT_APP_AWS_PROJECT_REGION: "us-east-1"
-      REACT_APP_AWS_COGNITO_IDENTITY_POOL_ID:
-      REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
-      REACT_APP_AWS_USER_POOLS_ID: "us-east-1_8Tsp8TsQJ"
-      REACT_APP_CLIENT_ID=: "51qvlsvs9toh25cp2br4acgosp"
+     
     build: ./backend-flask
     ports:
       - "4567:4567"
@@ -22,6 +18,11 @@ services:
   frontend-react-js:
     environment:
       REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
+      REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
+      REACT_APP_AWS_USER_POOLS_ID: "us-east-1_unxV9N09n"
+      REACT_APP_CLIENT_ID: "5ou33i17bgh351k5bi7eff8h5u"
     build: ./frontend-react-js
     ports:
       - "3000:3000"

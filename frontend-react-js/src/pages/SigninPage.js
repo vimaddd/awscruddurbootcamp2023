@@ -2,26 +2,51 @@ import './SigninPage.css';
 import React from "react";
 import {ReactComponent as Logo} from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
+import { signIn } from 'aws-amplify/auth'
+import { Amplify } from 'aws-amplify';
 
 // [TODO] Authenication
 import Cookies from 'js-cookie'
+try {
+  Amplify.configure({
+    Auth: {
+      Cognito: {
+        userPoolClientId: '5ou33i17bgh351k5bi7eff8h5u',
+        userPoolId: 'us-east-1_unxV9N09n',
+          username: 'true',
+          email:true
+         
+      }
+
+    }
+  });
+} catch (error) {
+  console.log(error.message)
+}
 
 export default function SigninPage() {
 
+ 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState('');
 
+  
+
   const onsubmit = async (event) => {
-    event.preventDefault();
     setErrors('')
-    console.log('onsubmit')
-    if (Cookies.get('user.email') === email && Cookies.get('user.password') === password){
-      Cookies.set('user.logged_in', true)
-      window.location.href = "/"
-    } else {
-      setErrors("Email and password is incorrect or account doesn't exist")
-    }
+    event.preventDefault();
+      await signIn({username:email, password:password})
+        .then(user => {
+          window.location.href = "/"
+        })
+        .catch(err => { 
+          if (err.code == 'UserNotConfirmedException') {
+            window.location.href = "/confirm"
+          }
+          console.log(err)
+          setErrors(err.message)
+         });    
     return false
   }
 
