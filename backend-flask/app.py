@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 import os
+import sys
 
 from services.home_activities import *
 from services.notification_activities import *
@@ -13,8 +14,9 @@ from services.message_groups import *
 from services.messages import *
 from services.create_message import *
 from services.show_activity import *
+from flask_cors import CORS, cross_origin
 
-
+from lib.cognito_verification_token import CognitoTokenVerification , extract_access_token, TokenVerifyError
 from opentelemetry import trace
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
@@ -22,10 +24,10 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-#X RAY----
+""" #X RAY----
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
-
+ """
 # Initialize tracing and an exporter that can send data to Honeycomb
 provider = TracerProvider()
 processor = BatchSpanProcessor(OTLPSpanExporter())
@@ -34,25 +36,26 @@ trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
 
 app = Flask(__name__)
+
 FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 
 
+cognito_verification_token = CognitoTokenVerification(
+  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"),
+  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
+  region="us-east-1"
+)
+""" 
 xray_url = os.getenv("AWS_XRAY_URL")
 xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 XRayMiddleware(app, xray_recorder)
-
+ """
 
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
-cors = CORS(
-  app, 
-  resources={r"/api/*": {"origins": origins}},
-  expose_headers="location,link",
-  allow_headers="content-type,if-modified-since",
-  methods="OPTIONS,GET,HEAD,POST"
-)
+
 
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
@@ -89,10 +92,29 @@ def data_create_message():
     return model['data'], 200
   return
 
-@app.route("/api/activities/home", methods=['GET'])
+@app.route("/api/activities/home", methods=['GET','OPTIONS'])
+@cross_origin(origin='*')
 def data_home():
+  app.logger.debug('Received request with headers: %s', request.headers)
+  access_token = extract_access_token(request.headers)
+  try:
+    claims = cognito_verification_token.verify(access_token)
+    self.claims = self.token_service.claims
+    g.cognito_claims = self.claims
+  except TokenVerifyError as e:
+    _ = request.data
+    abort(make_response(jsonify(message=str(e)), 401))
+  app.logger.debug(
+  request.headers.get('Authorization'))
+  print(
+
+  request.headers.get('Authorization')
+  )
   data = HomeActivities.run()
   return data, 200
+
+
+
 
 @app.route("/api/activities/notifications", methods=['GET'])
 def data_notifications():
