@@ -24,10 +24,9 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-""" #X RAY----
+ #X RAY----
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
- """
 # Initialize tracing and an exporter that can send data to Honeycomb
 provider = TracerProvider()
 processor = BatchSpanProcessor(OTLPSpanExporter())
@@ -46,11 +45,10 @@ cognito_verification_token = CognitoTokenVerification(
   user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
   region="us-east-1"
 )
-""" 
 xray_url = os.getenv("AWS_XRAY_URL")
 xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 XRayMiddleware(app, xray_recorder)
- """
+
 
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
@@ -99,9 +97,14 @@ def data_home():
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_verification_token.verify(access_token)
-    self.claims = self.token_service.claims
-    g.cognito_claims = self.claims
+    print(claims)
+    app.logger.info(claims)
+
   except TokenVerifyError as e:
+    print(e)
+    app.logger(e)
+    app.logger.info(e)
+
     _ = request.data
     abort(make_response(jsonify(message=str(e)), 401))
   app.logger.debug(
