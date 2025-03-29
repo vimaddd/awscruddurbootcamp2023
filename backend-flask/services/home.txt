@@ -1,0 +1,10 @@
+"""  with tracer.start_as_current_span("home-activities-mock-data"):
+      span = trace.get_current_span()
+      now = datetime.now(timezone.utc).astimezone()
+      span.set_attribute("app.now", now.isoformat()) """
+
+export DB_SG_ID="sg-0544b9e6fbc112367"
+gp env DB_SG_ID="sg-0544b9e6fbc112367"
+
+export DB_SG_RULE_ID="sgr-05ea19a3798456b98"
+gp env DB_SG_RULE_ID="sgr-05ea19a3798456b98"

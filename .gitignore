@@ -1,2 +1,4 @@
 password.txt
 a.sh
+b.sh
+backend-flask/bin/db-seed
