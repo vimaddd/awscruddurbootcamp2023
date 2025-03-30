@@ -7,7 +7,7 @@ services:
     environment:
       FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-      CONNECTION_URL: "${CONNECTION_URL}"
+      CONNECTION_URL: "${PROD_CONNECTION_URL}"
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
       OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
       OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME}"
@@ -60,7 +60,7 @@ services:
     ports:
       - '5432:5432'
     volumes: 
-      - postgres_data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
 
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names

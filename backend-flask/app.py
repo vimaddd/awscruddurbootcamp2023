@@ -98,15 +98,11 @@ def data_home():
   try:
     claims = cognito_verification_token.verify(access_token)
     print(claims)
-    app.logger.info(claims)
 
   except TokenVerifyError as e:
     print(e)
-    app.logger(e)
-    app.logger.info(e)
 
     _ = request.data
-    abort(make_response(jsonify(message=str(e)), 401))
   app.logger.debug(
   request.headers.get('Authorization'))
   print(
