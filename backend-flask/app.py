@@ -58,7 +58,13 @@ origins = [frontend, backend]
 
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
-  user_handle  = 'andrewbrown'
+  claims = cognito_jwt_token.verify(access_token)
+  # authenicatied request
+  app.logger.debug("authenicated")
+  app.logger.debug(claims)
+  cognito_user_id = claims['sub']
+  model = MessageGroups.run(cognito_user_id=cognito_user_id)
+  user_handle  = 'vimad'
   model = MessageGroups.run(user_handle=user_handle)
   if model['errors'] is not None:
     return model['errors'], 422
