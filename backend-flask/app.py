@@ -55,21 +55,27 @@ frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
 
-
+cors = CORS(
+  app, 
+  resources={r"/api/*": {"origins": origins}},
+  headers=['Content-Type', 'Authorization'], 
+  expose_headers='Authorization',
+  methods="OPTIONS,GET,HEAD,POST"
+)
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
-  claims = cognito_jwt_token.verify(access_token)
+  try:
   # authenicatied request
-  app.logger.debug("authenicated")
-  app.logger.debug(claims)
-  cognito_user_id = claims['sub']
-  model = MessageGroups.run(cognito_user_id=cognito_user_id)
-  user_handle  = 'vimad'
-  model = MessageGroups.run(user_handle=user_handle)
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
+    app.logger.debug("authenicated")
+    model = MessageGroups.run(cognito_user_id="3c92c388-b40f-4de9-8c06-c1994f70fdee")
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except TokenVerifyError as e:
+    # unauthenicatied request
+    app.logger.debug(e)
+    return {}, 401
 
 @app.route("/api/messages/@<string:handle>", methods=['GET'])
 def data_messages(handle):

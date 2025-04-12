@@ -3,14 +3,14 @@
 import boto3
 import sys
 attrs = {
-    'endpoint_url':'http://localhost:8000'
+    'endpoint_url':'https://dynamodb.us-east-1.amazonaws.com'
 }
 
 if len(sys.argv) == 2:
     if "prod" in sys.argsv[1]:
       attrs = {}
 
-dynamodb = boto3.client('dynamodb',**attrs,region_name='us-east-1')
+dynamodb = boto3.client('dynamodb',**attrs,region_name='us-east-1',)
 table_name = 'cruddur-message'
 
 response = dynamodb.create_table(

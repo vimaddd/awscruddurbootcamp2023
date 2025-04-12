@@ -26,7 +26,8 @@ export default function HomeFeedPage() {
 
   const loadData = async () => {
     try {
-      const backend_url = `https://4567-mertttestss-awscruddurb-f37wg18rhxp.ws-us118.gitpod.io/api/activities/home`
+      //burası hep değişcek
+      const backend_url = `https://4567-mertttestss-awscruddurb-d3krkyqkryq.ws-us118.gitpod.io/api/activities/home`
       const res = await fetch(backend_url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`

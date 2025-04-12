@@ -12,7 +12,7 @@ sys.path.append(parent_path)
 from lib.db import db
 
 attrs = {
-  'endpoint_url': 'http://localhost:8000'
+  'endpoint_url': 'https://dynamodb.us-east-1.amazonaws.com'
 }
 
 if len(sys.argv) == 2:
@@ -46,7 +46,7 @@ query_params = {
   'ScanIndexForward': False,
   'ExpressionAttributeValues': {
     ':year': {'S': str(current_year) },
-    ':pk': {'S': f"GRP#{my_user_uuid}"}
+    ':pk': {'S': f"MSG#5ae290ed-55d1-47a0-bc6d-fe2bc2700399"}
   },
   'ReturnConsumedCapacity': 'TOTAL'
 }

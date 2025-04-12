@@ -1,4 +1,3 @@
-import './NotificationFeedPage.css';
 import React from "react";
 
 import DesktopNavigation  from '../components/DesktopNavigation';
@@ -18,22 +17,6 @@ export default function NotificationsFeedPage() {
   const [user, setUser] = React.useState(null);
   const dataFetchedRef = React.useRef(false);
 
-  const loadData = async () => {
-    try {
-      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/notifications`
-      const res = await fetch(backend_url, {
-        method: "GET"
-      });
-      let resJson = await res.json();
-      if (res.status === 200) {
-        setActivities(resJson)
-      } else {
-        console.log(res)
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const checkAuth = async () => {
     console.log('checkAuth')
@@ -51,7 +34,6 @@ export default function NotificationsFeedPage() {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
 
-    loadData();
     checkAuth();
   }, [])
 

@@ -3,7 +3,7 @@ set -e
 if [ "$1" = "prod"]; then
   ENDPOINT_URL=""
 else
-  ENDPOINT_URL="--endpoint-url=http://localhost:8000"
+  ENDPOINT_URL="--endpoint-url=https://dynamodb.us-east-1.amazonaws.com"
 fi
 
 aws dynamodb list-tables $ENDPOINT_URL \

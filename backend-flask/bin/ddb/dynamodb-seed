@@ -16,14 +16,14 @@ print(current_path)
 from lib.db import db
 
 attrs = {
-  'endpoint_url': 'http://localhost:8000'
+  'endpoint_url': 'https://dynamodb.us-east-1.amazonaws.com'
 }
 message_group_uuid = "5ae290ed-55d1-47a0-bc6d-fe2bc2700399" 
 now = datetime.now(timezone.utc).astimezone()
 if len(sys.argv) == 2:
   if "prod" in sys.argv[1]:
     attrs = {}
-ddb = boto3.client('dynamodb',**attrs,region_name='us-east-1')
+ddb = boto3.client('dynamodb',**attrs,region_name='us-east-1', )
 def get_user_uuids():
   sql = """
     SELECT 

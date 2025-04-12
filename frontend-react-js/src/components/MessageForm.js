@@ -14,32 +14,7 @@ export default function ActivityForm(props) {
     classes.push('err')
   }
 
-  const onsubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/messages`
-      console.log('onsubmit payload', message)
-      const res = await fetch(backend_url, {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: message,
-          user_receiver_handle: params.handle
-        }),
-      });
-      let data = await res.json();
-      if (res.status === 200) {
-        props.setMessages(current => [...current,data]);
-      } else {
-        console.log(res)
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
+
 
   const textarea_onchange = (event) => {
     setCount(event.target.value.length);
@@ -49,7 +24,6 @@ export default function ActivityForm(props) {
   return (
     <form 
       className='message_form'
-      onSubmit={onsubmit}
     >
       <textarea
         type="text"

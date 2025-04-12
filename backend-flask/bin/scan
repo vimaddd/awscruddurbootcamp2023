@@ -5,7 +5,7 @@ import boto3
 attrs = {
   'endpoint_url': 'http://localhost:8000'
 }
-ddb = boto3.resource('dynamodb',**attrs,region_name='us-east-1')
+ddb = boto3.resource('dynamodb',**attrs,region_name='us-east-1',)
 table_name = 'cruddur-message'
 
 table = ddb.Table(table_name)
