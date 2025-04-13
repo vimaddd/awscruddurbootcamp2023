@@ -83,11 +83,28 @@ def data_messages(message_group_uuid):
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_create_message():
-  user_sender_handle = 'andrewbrown'
-  user_receiver_handle = request.json['user_receiver_handle']
+  user_receiver_handle =request.json['handle']
+  message_group_uuid = request.json['message_group_uuid']
   message = request.json['message']
 
-  model = CreateMessage.run(message=message,user_sender_handle=user_sender_handle,user_receiver_handle=user_receiver_handle)
+  if message_group_uuid == None:
+    # Create for the first time
+    model = CreateMessage.run(
+      mode="create",
+      message=message,
+      cognito_user_id=  "3c92c388-b40f-4de9-8c06-c1994f70fdee",
+      user_receiver_handle=user_receiver_handle
+    )
+  else:
+    # Push onto existing Message Group
+    model = CreateMessage.run(
+      mode="update",
+      message=message,
+      message_group_uuid=message_group_uuid,
+cognito_user_id="3c92c388-b40f-4de9-8c06-c1994f70fdee",
+    )
+
+
   if model['errors'] is not None:
     return model['errors'], 422
   else:
