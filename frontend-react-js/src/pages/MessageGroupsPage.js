@@ -35,7 +35,8 @@ export default function MessageGroupsPage() {
     //prevents double call
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
-
+    
+    loadData()
     checkAuth(setUser);
   }, [])
   return (

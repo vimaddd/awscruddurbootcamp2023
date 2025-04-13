@@ -64,25 +64,16 @@ cors = CORS(
 )
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
-  try:
   # authenicatied request
     app.logger.debug("authenicated")
     model = MessageGroups.run(cognito_user_id="3c92c388-b40f-4de9-8c06-c1994f70fdee")
-    if model['errors'] is not None:
-      return model['errors'], 422
-    else:
-      return model['data'], 200
-  except TokenVerifyError as e:
-    # unauthenicatied request
-    app.logger.debug(e)
-    return {}, 401
+    return model
 
-@app.route("/api/messages/@<string:handle>", methods=['GET'])
-def data_messages(handle):
-  user_sender_handle = 'andrewbrown'
-  user_receiver_handle = request.args.get('user_reciever_handle')
+@app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
+def data_messages(message_group_uuid):
 
-  model = Messages.run(user_sender_handle=user_sender_handle, user_receiver_handle=user_receiver_handle)
+
+  model = Messages.run(cognito_user_id="3c92c388-b40f-4de9-8c06-c1994f70fdee",message_group_uuid=message_group_uuid)
   if model['errors'] is not None:
     return model['errors'], 422
   else:

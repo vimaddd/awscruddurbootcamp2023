@@ -2,7 +2,6 @@ import './MessageGroupFeed.css';
 import MessageGroupItem from './MessageGroupItem';
 
 export default function MessageGroupFeed(props) {
-  print(props)
   return (
     <div className='message_group_feed'>
       <div className='message_group_feed_heading'>
