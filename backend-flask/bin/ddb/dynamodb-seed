@@ -11,8 +11,6 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.abspath(os.path.join(current_path, '..','..'))
 sys.path.append(parent_path)
 
-print(parent_path)
-print(current_path)
 from lib.db import db
 
 attrs = {
@@ -40,17 +38,15 @@ def get_user_uuids():
 
   users = db.query_array_json(sql,{
     'my_handle':  'vimad',
-    'other_handle': 'vimad'
+    'other_handle': 'londo'
   })
 
   my_user    = next((item for item in users if item["handle"] == 'vimad'), None)
-  other_user = next((item for item in users if item["handle"] == 'vimad'), None)
+  other_user = next((item for item in users if item["handle"] == 'londo'), None)
   results = {
     'my_user': my_user,
     'other_user': other_user
   }
-  print('get_user_uuids')
-  print(results)
   return results
 
 users = get_user_uuids()
@@ -88,7 +84,6 @@ def create_message(client,message_group_uuid, created_at, message, my_user_uuid,
     Item=record
   )
   # print the response
-  print(response)
 
 create_message_group(
   client=ddb,
@@ -231,7 +226,6 @@ for i in range(len(lines)):
      key = 'other_user'
      message = lines[i].replace('Person 2: ', '')
    else:
-     print(lines[i])
      raise 'invalid line'
    created_at = (now + timedelta(minutes=i)).isoformat()
    create_message(

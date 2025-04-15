@@ -12,6 +12,7 @@ from services.create_activity import *
 from services.create_reply import *
 from services.search_activities import *
 from services.message_groups import *
+from services.users_short import *
 from services.messages import *
 from services.create_message import *
 from services.show_activity import *
@@ -81,35 +82,34 @@ def data_messages(message_group_uuid):
   return
 
 @app.route("/api/messages", methods=['POST','OPTIONS'])
-@cross_origin()
+@cross_origin(origin='*')
+
 def data_create_message():
-  user_receiver_handle =request.json['handle']
-  message_group_uuid = request.json['message_group_uuid']
-  message = request.json['message']
+  try:
+    # authenicatied request
+    cognito_user_id = "3c92c388-b40f-4de9-8c06-c1994f70fdee"
+    message = request.json['message']
 
-  if message_group_uuid == None:
-    # Create for the first time
+    message_group_uuid   = request.json.get('message_group_uuid',None)
+    user_receiver_handle = request.json.get('user_receiver_handle',None)
+
+      # Push onto existing Message Group
     model = CreateMessage.run(
-      mode="create",
-      message=message,
-      cognito_user_id=  "3c92c388-b40f-4de9-8c06-c1994f70fdee",
-      user_receiver_handle=user_receiver_handle
-    )
-  else:
-    # Push onto existing Message Group
-    model = CreateMessage.run(
-      mode="update",
-      message=message,
-      message_group_uuid=message_group_uuid,
-cognito_user_id="3c92c388-b40f-4de9-8c06-c1994f70fdee",
-    )
+        mode="update",
+        message=message,
+        message_group_uuid=message_group_uuid,
+        cognito_user_id=cognito_user_id
+      )
 
-
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
-  return
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except TokenVerifyError as e:
+    # unauthenicatied request
+    app.logger.debug(e)
+    app.logger.debug("unauthenicated")
+    return {}, 401
 
 @app.route("/api/activities/home", methods=['GET','OPTIONS'])
 @cross_origin(origin='*')
@@ -118,7 +118,6 @@ def data_home():
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_verification_token.verify(access_token)
-    print(claims)
 
   except TokenVerifyError as e:
     print(e)
@@ -141,7 +140,12 @@ def data_notifications():
   data = NotificationsActivities.run()
   return data, 200
 
+@app.route("/api/users/<string:handle>/short", methods=['GET'])
+def data_users_short(handle):
+  data = UsersShort.run(handle)
+  return data, 200
 
+  
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
 def data_handle(handle):
   model = UserActivities.run(handle)

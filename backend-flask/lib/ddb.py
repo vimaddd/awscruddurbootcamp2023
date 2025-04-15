@@ -92,7 +92,7 @@ class Ddb:
       'user_handle': {'S': my_user_handle}
     }
     # insert the record into the table
-    table_name = 'cruddur-messages'
+    table_name = 'cruddur-message'
     response = client.put_item(
       TableName=table_name,
       Item=record

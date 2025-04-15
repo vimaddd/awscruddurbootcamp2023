@@ -16,6 +16,7 @@ import {
   createBrowserRouter,
   RouterProvider
 } from "react-router-dom";
+import MessageGroupNewPage from './components/MessageGroupNewPage';
 
 try {
   Amplify.configure({
@@ -53,8 +54,8 @@ const router = createBrowserRouter([
     element: <MessageGroupsPage />
   },
   {
-    path: "/messages/@:handle",
-    element: <MessageGroupPage />
+    path: "/messages/new/:handle",
+    element: <MessageGroupNewPage/>
   },
   {
     path: "/signup",

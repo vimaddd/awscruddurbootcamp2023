@@ -33,7 +33,7 @@ export default function ActivityForm(props) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem("access_token")}`
         },
-        
+        body: JSON.stringify(json)
       });
       let data = await res.json();
       if (res.status === 200) {
@@ -53,6 +53,7 @@ export default function ActivityForm(props) {
   }
 
 
+
   const textarea_onchange = (event) => {
     setCount(event.target.value.length);
     setMessage(event.target.value);
@@ -70,7 +71,7 @@ export default function ActivityForm(props) {
       />
       <div className='submit'>
         <div className={classes.join(' ')}>{1024-count}</div>
-        <button type='submit'>Message</button>
+        <button type='submit' onClick={onsubmit}>Message</button>
       </div>
     </form>
   );
