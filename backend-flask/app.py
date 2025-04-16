@@ -70,7 +70,7 @@ def data_message_groups():
     model = MessageGroups.run(cognito_user_id="3c92c388-b40f-4de9-8c06-c1994f70fdee")
     return model
 
-@app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
+@app.route("/api/messages/@<string:message_group_uuid>", methods=['GET'])
 def data_messages(message_group_uuid):
 
 
