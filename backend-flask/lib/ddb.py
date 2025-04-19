@@ -16,8 +16,8 @@ class Ddb:
       'dynamodb',
       **attrs,
       region_name='us-east-1',
-      aws_access_key_id="[REMOVED]",
-      aws_secret_access_key="[REMOVED]")
+      aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+      aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
     return dynamodb
   def list_message_groups(client,my_user_uuid):
     year = str(datetime.now().year)
