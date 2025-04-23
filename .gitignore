@@ -5,3 +5,4 @@ backend-flask/bin/db-seed
 backend-flask/lib/db.py
 
 backend-flask/lib/ddb.py
+frontend-react-js/build/*

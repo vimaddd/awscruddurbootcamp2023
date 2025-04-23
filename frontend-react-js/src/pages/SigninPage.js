@@ -4,8 +4,7 @@ import {ReactComponent as Logo} from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
 import { signIn } from 'aws-amplify/auth'
 import { Amplify } from 'aws-amplify';
-import { currentSession } from 'aws-amplify/auth'
-import { Auth } from 'aws-amplify';
+
 import { fetchAuthSession } from 'aws-amplify/auth';
 
 // [TODO] Authenication

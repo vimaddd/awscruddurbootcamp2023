@@ -2,7 +2,6 @@ import './ProfileInfo.css';
 import {ReactComponent as ElipsesIcon} from './svg/elipses.svg';
 import React from "react";
 
-import { Amplify } from 'aws-amplify';
 
 import { signOut } from 'aws-amplify/auth'
 
