@@ -10,10 +10,23 @@
     ],
     "containerDefinitions": [
       {
+        "name" : "xray",
+        "image" : "public.ecr.aws/xray/aws-xray-daemon",
+        "essential" : true,
+        "user":1337,
+        "portMappings": [
+          {
+            "name": "xray",
+            "containerPort": 2000,
+            "protocol": "udp"
+          }
+        ]
+      }
+      ,{
         "name": "backend-flask",
         "image": "160885262924.dkr.ecr.us-east-1.amazonaws.com/backend-flask",
         "essential": true,
-        "healthCheck": {
+        "healthCheck": {  
           "command": [
             "CMD-SHELL",
             "python /backend-flask/bin/flask/health-check"
@@ -40,6 +53,8 @@
           }
         },
         "environment": [
+          {"name": "OTEL_SERVICE_NAME", "value": "backend-flask"},
+        {"name": "OTEL_EXPORTER_OTLP_ENDPOINT", "value": "https://api.honeycomb.io"},
           {"name": "AWS_COGNITO_USER_POOL_ID", "value": "us-east-1_unxV9N09n"},
           {"name": "AWS_COGNITO_USER_POOL_CLIENT_ID", "value": "5ou33i17bgh351k5bi7eff8h5u"},
           {"name": "FRONTEND_URL", "value": "*"},
@@ -49,7 +64,10 @@
         "secrets": [
           {"name": "AWS_ACCESS_KEY_ID"    , "valueFrom": "arn:aws:ssm:us-east-1:160885262924:parameter/cruddur/backend-flask/AWS_ACCESS_KEY_ID"},
           {"name": "AWS_SECRET_ACCESS_KEY", "valueFrom": "arn:aws:ssm:us-east-1:160885262924:parameter/cruddur/backend-flask/AWS_SECRET_ACCESS_KEY"},
-          {"name": "PROD_CONNECTION_URL"       , "valueFrom": "arn:aws:ssm:us-east-1:160885262924:parameter/cruddur/backend-flask/PROD_CONNECTION_URL" }
+          {"name": "PROD_CONNECTION_URL"       , "valueFrom": "arn:aws:ssm:us-east-1:160885262924:parameter/cruddur/backend-flask/PROD_CONNECTION_URL" },
+          {"name": "ROLLBAR_ACCESS_TOKEN" , "valueFrom": "arn:aws:ssm:ssm:us-east-1:160885262924:parameter/cruddur/backend-flask/ROLLBAR_ACCESS_TOKEN" },
+        {"name": "OTEL_EXPORTER_OTLP_HEADERS" , "valueFrom": "arn:aws:ssm:us-east-1:160885262924:parameter/cruddur/backend-flask/OTEL_EXPORTER_OTLP_HEADERS" }
+
         ]
       }
     ]
